@@ -40,9 +40,10 @@ public class CadastroActivity extends AppCompatActivity {
 
             String nome = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
             String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
+            String foneAlternativo = ((EditText) findViewById(R.id.editTextFoneAlternativo)).getText().toString();
             String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
 
-            Contato c = new Contato(nome,fone,email);
+            Contato c = new Contato(nome,fone,foneAlternativo,email);
 
             int idContato = (int) dao.incluirContato(c);
             c.setId(idContato);

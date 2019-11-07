@@ -32,6 +32,9 @@ public class DetalheActivity extends AppCompatActivity {
             EditText fone = findViewById(R.id.editTextFone);
             fone.setText(c.getFone());
 
+            EditText foneAlternativo = findViewById(R.id.editTextFoneAlternativo);
+            foneAlternativo.setText(c.getFoneAlternativo());
+
             EditText email = findViewById(R.id.editTextEmail);
             email.setText(c.getEmail());
 
@@ -62,10 +65,12 @@ public class DetalheActivity extends AppCompatActivity {
 
             String nome = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
             String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
+            String foneAltenativo = ((EditText) findViewById(R.id.editTextFoneAlternativo)).getText().toString();
             String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
 
             c.setNome(nome);
             c.setFone(fone);
+            c.setFoneAlternativo(foneAltenativo);
             c.setEmail(email);
 
             dao.alterarContato(c);

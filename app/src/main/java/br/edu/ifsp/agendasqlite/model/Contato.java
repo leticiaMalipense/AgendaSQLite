@@ -7,14 +7,17 @@ public class Contato implements Serializable {
     private int id;
     private String nome;
     private String fone;
+    private String foneAlternativo;
     private String email;
+    private Boolean favorito = Boolean.FALSE;
 
     public Contato() {
     }
 
-    public Contato(String nome, String fone, String email) {
+    public Contato(String nome, String fone, String foneAlternativo, String email) {
         this.nome = nome;
         this.fone = fone;
+        this.foneAlternativo = foneAlternativo;
         this.email = email;
     }
 
@@ -52,6 +55,22 @@ public class Contato implements Serializable {
 
     public void setFone(String fone) {
         this.fone = fone;
+    }
+
+    public String getFoneAlternativo() {
+        return foneAlternativo;
+    }
+
+    public void setFoneAlternativo(String foneAlternativo) {
+        this.foneAlternativo = foneAlternativo;
+    }
+
+    public Boolean getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Boolean favorito) {
+        this.favorito = favorito;
     }
 
     public String getEmail() {

@@ -1,5 +1,6 @@
 package br.edu.ifsp.agendasqlite.data;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class ContatoAdapter
 
     static List<Contato> contatos;
     List<Contato> contactListFiltered;
+    private Context context;
 
     private static ItemClickListener clickListener;
 
@@ -88,12 +90,19 @@ public class ContatoAdapter
         View view = LayoutInflater.from(parent.getContext())
                    .inflate(R.layout.contato_celula,parent,false);
 
+        this.context = parent.getContext();
         return new ContatoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ContatoViewHolder holder, int position) {
-            holder.nome.setText(contactListFiltered.get(position).getNome());
+        Contato c = contactListFiltered.get(position);
+        if(c.getFavorito())
+            holder.imgFavorito.setImageResource(android.R.drawable.btn_star_big_on);
+        else
+            holder.imgFavorito.setImageResource(android.R.drawable.btn_star_big_off);
+
+        holder.nome.setText(contactListFiltered.get(position).getNome());
     }
 
     @Override
@@ -141,16 +150,27 @@ public class ContatoAdapter
             implements View.OnClickListener
     {
         final TextView nome;
+        final ImageView imgFavorito;
 
         public ContatoViewHolder(@NonNull View itemView) {
             super(itemView);
             nome = (TextView) itemView.findViewById(R.id.nome);
+            imgFavorito = (ImageView) itemView.findViewById(R.id.imgFavorito);
             itemView.setOnClickListener(this);
 
 
-            ImageView imgFavorito = itemView.findViewById(R.id.imgFavorito);
             imgFavorito.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    ContatoDAO dao = new ContatoDAO(context);
+                    Contato c = contactListFiltered.get(getAdapterPosition());
+
+                    if(c.getFavorito())
+                        c.setFavorito(Boolean.FALSE);
+                    else
+                        c.setFavorito(Boolean.TRUE);
+
+                    dao.alterarContato(c);
+                    notifyItemChanged(contatos.indexOf(c));
 
                 }
             });
