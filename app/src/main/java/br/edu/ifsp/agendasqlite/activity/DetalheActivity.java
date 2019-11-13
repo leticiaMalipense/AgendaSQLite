@@ -1,19 +1,26 @@
 package br.edu.ifsp.agendasqlite.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import br.edu.ifsp.agendasqlite.R;
 import br.edu.ifsp.agendasqlite.data.ContatoDAO;
 import br.edu.ifsp.agendasqlite.model.Contato;
+import br.edu.ifsp.agendasqlite.utils.DatePickeFragment;
 
 public class DetalheActivity extends AppCompatActivity {
+
+    public static final String CAMPO_OBRIGATORIO_NAO_INFORMADO = "Campo Obrigatório não informado";
+    private EditText edtNome, edtFone, edtFoneAlternativo, edtEmail, edtData;
 
     Contato c;
 
@@ -38,9 +45,10 @@ public class DetalheActivity extends AppCompatActivity {
             EditText email = findViewById(R.id.editTextEmail);
             email.setText(c.getEmail());
 
+            TextView dataAniversario = findViewById(R.id.editTextDate);
+            dataAniversario.setText(c.getDataAniversario());
+
         }
-
-
 
     }
 
@@ -50,6 +58,11 @@ public class DetalheActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detalhe, menu);
         return true;
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickeFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
     @Override
@@ -63,25 +76,36 @@ public class DetalheActivity extends AppCompatActivity {
         if (id == R.id.action_alterarContato) {
             ContatoDAO dao = new ContatoDAO(this);
 
-            String nome = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
-            String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
-            String foneAltenativo = ((EditText) findViewById(R.id.editTextFoneAlternativo)).getText().toString();
-            String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
+            edtNome = findViewById(R.id.editTextNome);
+            edtFone = findViewById(R.id.editTextFone);
+            edtFoneAlternativo = findViewById(R.id.editTextFoneAlternativo);
+            edtEmail = findViewById(R.id.editTextEmail);
+            edtData = findViewById(R.id.editTextDate);
 
-            c.setNome(nome);
-            c.setFone(fone);
-            c.setFoneAlternativo(foneAltenativo);
-            c.setEmail(email);
+            if(validaCamposObrigatorio()) {
 
-            dao.alterarContato(c);
-            Log.d("ID: ", Integer.toString(c.getId()));
-            Log.d("NOME: ",c.getNome());
+                String nome = edtNome.getText().toString();
+                String fone = edtFone.getText().toString();
+                String foneAlternativo = edtFoneAlternativo.getText().toString();
+                String data = edtData.getText().toString();
+                String email = edtEmail.getText().toString();
 
-            MainActivity.adapter.atualizaContatoAdapter(c);
+                c.setNome(nome);
+                c.setFone(fone);
+                c.setFoneAlternativo(foneAlternativo);
+                c.setEmail(email);
+                c.setDataAniversario(data);
 
-            Toast.makeText(getApplicationContext(),"Contato alterado",Toast.LENGTH_LONG).show();
+                dao.alterarContato(c);
+                Log.d("ID: ", Integer.toString(c.getId()));
+                Log.d("NOME: ", c.getNome());
 
-            finish();
+                MainActivity.adapter.atualizaContatoAdapter(c);
+
+                Toast.makeText(getApplicationContext(), "Contato alterado", Toast.LENGTH_LONG).show();
+
+                finish();
+            }
         }
 
         if (id ==R.id.action_excluirContato) {
@@ -98,6 +122,36 @@ public class DetalheActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    public boolean validaCamposObrigatorio(){
+        boolean validated = true;
+        if(edtNome.getText() == null || edtNome.getText().length() == 0){
+            edtNome.setError(CAMPO_OBRIGATORIO_NAO_INFORMADO);
+            validated = false;
+        }
+
+        if(edtFone.getText() == null || edtFone.getText().length() == 0){
+            edtFone.setError(CAMPO_OBRIGATORIO_NAO_INFORMADO);
+            validated = false;
+        }
+
+        if(edtFoneAlternativo.getText() == null || edtFoneAlternativo.getText().length() == 0){
+            edtFoneAlternativo.setError(CAMPO_OBRIGATORIO_NAO_INFORMADO);
+            validated = false;
+        }
+
+        if(edtEmail.getText() == null || edtEmail.getText().length() == 0){
+            edtEmail.setError(CAMPO_OBRIGATORIO_NAO_INFORMADO);
+            validated = false;
+        }
+
+        if(edtData.getText() == null || edtData.getText().length() == 0){
+            edtData.setError(CAMPO_OBRIGATORIO_NAO_INFORMADO);
+            validated = false;
+        }
+
+        return validated;
+    }
 
 
 

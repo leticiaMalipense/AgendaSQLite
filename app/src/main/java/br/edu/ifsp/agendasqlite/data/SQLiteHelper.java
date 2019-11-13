@@ -16,9 +16,10 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_FONE = "fone";
     static final String KEY_FONE_ALTERNATIVO = "fone_alternativo";
     static final String KEY_EMAIL = "email";
+    static final String KEY_DATA_ANIVERSARIO = "data_aniversario";
     static final String KEY_FAVORITO = "favorito";
 
-    private static final int DATABASE_VERSION = 2;
+    private static int DATABASE_VERSION = 4;
 
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                                                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -44,6 +45,10 @@ class SQLiteHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 3){
             String sql="Alter table contatos add column fone_alternativo TEXT ";
+            db.execSQL(sql);
+        }
+        if (oldVersion < 4){
+            String sql="Alter table contatos add column data_aniversario TEXT ";
             db.execSQL(sql);
         }
     }
